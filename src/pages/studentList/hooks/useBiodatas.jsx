@@ -29,3 +29,29 @@ export const useGetBiodata = () => {
 
 	return [isLoading, data, getData]
 }
+
+export const useAddBiodata = () => {
+	const [isLoading, setIsLoading] = useState(false)
+
+	const addData = useCallback(async (data, onSuccess) => {
+		try {
+			setIsLoading(true)
+
+			await api.addStudent(data)
+			onSuccess && onSuccess()
+			message.open({
+				type: 'success',
+				content: 'Data added successfully',
+			})
+		} catch (err) {
+			message.open({
+				type: 'error',
+				content: `${err?.message}`,
+			})
+		} finally {
+			setIsLoading(false)
+		}
+	}, [])
+
+	return [isLoading, addData]
+}
