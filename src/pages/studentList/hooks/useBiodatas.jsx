@@ -16,7 +16,7 @@ export const useGetBiodata = () => {
 			const res = await api.getAllStudent()
 
 			// eksekusi selanjutnya
-			setData(res?.data)
+			setData(res?.data?.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)))
 		} catch (err) {
 			message.open({
 				type: 'error',

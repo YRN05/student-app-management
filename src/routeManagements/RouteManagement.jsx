@@ -10,6 +10,7 @@ import { PublickLayout } from '../layouts/PublickLayout'
 import { AboutMe } from '../pages/aboutMe/AboutMe'
 import { StudentList } from '../pages/studentList/StudentList'
 import { AddStudent } from '../pages/addStudent/AddStudent'
+import { EditStudent } from '../pages/editStudent/EditStudent'
 
 export const RouteManagement = () => {
 	const userData = JSON.parse(localStorage.getItem('userData'))
@@ -17,7 +18,7 @@ export const RouteManagement = () => {
 
 	// akan berjalan jika depenesi "[]" valuenya berubah
 	useEffect(() => {
-		if (!userData) navigate("/auth")
+		if (!userData) navigate('/auth')
 	}, [userData])
 	return (
 		<Routes>
@@ -28,6 +29,7 @@ export const RouteManagement = () => {
 				<Route path="/about-me" element={<AboutMe />} />
 				<Route path="/student-list" element={<StudentList />} />
 				<Route path="/add-student" element={<AddStudent />} />
+				<Route path="/edit-student/:id" element={<EditStudent />} />
 			</Route>
 		</Routes>
 	)

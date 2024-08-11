@@ -6,7 +6,7 @@ import { Card } from 'antd'
 import './studentList.css'
 import { Link } from 'react-router-dom'
 import { Input } from 'antd'
-import { CaretRightOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons'
+import { CalendarOutlined, CaretRightOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons'
 import { GapComponent } from '../../components/gapComponent/GapComponent'
 import { useState } from 'react'
 import { Flex } from 'antd'
@@ -15,6 +15,8 @@ import { AddStudent } from '../addStudent/AddStudent'
 import { DefaultProfile } from '../../assets'
 import { Radio } from 'antd'
 import { Children } from 'react'
+import { Divider } from 'antd'
+import { Empty } from 'antd'
 const { Meta } = Card
 
 export const StudentList = () => {
@@ -26,7 +28,7 @@ export const StudentList = () => {
 	const [currentPage, setCurrentPage] = useState(1)
 	const [minValue, setMinValue] = useState(0)
 	const [maxValue, setMaxValue] = useState(12)
-	const [sort, setSort] = useState()
+	const [sort, setSort] = useState('creted-at')
 
 	const [sortClass, setSortClass] = useState()
 	const [filterJurusan, setFilterJurusan] = useState()
@@ -43,6 +45,7 @@ export const StudentList = () => {
 	}, [])
 
 	const sorterOpion = [
+		{ label: <CalendarOutlined />, value: 'creted-at' },
 		{ label: 'A-Z', value: 'a-z' },
 		{ label: 'Z-A', value: 'z-a' },
 	]
@@ -79,8 +82,6 @@ export const StudentList = () => {
 			setFilterGender(values.gender)
 			handleSearch('filter-by-gender', values.gender)
 		}
-
-		console.log(values)
 	}
 
 	const handleSearch = (type, value) => {
@@ -90,9 +91,7 @@ export const StudentList = () => {
 		const jurusanValue = type === 'filter-by-jurusan' ? value : filterJurusan
 		const genderValue = type === 'filter-by-gender' ? value : filterGender
 		const sorterValue = type === 'sorter' ? value : sort
-		console.log(sortClass, filterJurusan, filterGender)
 
-		console.log(classValue, jurusanValue, genderValue)
 		const searchAndFilter = () => {
 			// search algoritma
 			const filteredBiodata = biodata?.filter((item) => {
@@ -114,12 +113,14 @@ export const StudentList = () => {
 
 				// filter by gender
 				const gender = item.gender
-				const isMatchByGender = genderValue ? gender.toLowerCase().includes(genderValue.toLowerCase()) : true
+				const isMatchByGender = genderValue ? gender.toLowerCase() === genderValue.toLowerCase() : true
 
 				return (isMatchName || isMatchAddress) && isMatchByClass && isMatchByJurusan && isMatchByGender
 			})
 
-			if (sorterValue === 'a-z') {
+			if (sorterValue === 'creted-at') {
+				filteredBiodata?.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1))
+			} else if (sorterValue === 'a-z') {
 				filteredBiodata?.sort((a, b) => (a.firstName.toLowerCase() > b.firstName.toLowerCase() ? 1 : -1))
 			} else {
 				filteredBiodata?.sort((a, b) => (a.firstName.toLowerCase() > b.firstName.toLowerCase() ? -1 : 1))
@@ -132,24 +133,32 @@ export const StudentList = () => {
 
 	const total = data?.length
 	const handlePagination = (value) => {
-		console.log('value:', value)
 		setCurrentPage(value)
 		setMinValue((value - 1) * 12)
 		setMaxValue(value * 12)
 	}
 
-	const handleCollapesOpition = (key) => {}
+	const [form] = Form.useForm()
+
+	const resetFilter = () => {
+		setSortClass()
+		setFilterJurusan()
+		setFilterGender()
+		setSearch('')
+		form?.resetFields()
+		setData(biodata)
+	}
 
 	const items = [
 		{
 			key: '1',
 			label: (
 				<Flex>
-					<Input prefix={<SearchOutlined />} placeholder="Search" onChange={onSearch} />
+					<Input prefix={<SearchOutlined />} placeholder="Search" value={search} onChange={onSearch} />
 				</Flex>
 			),
 			children: (
-				<Form name="filter" onValuesChange={handleFilter} layout="vertical">
+				<Form form={form} name="filter" onValuesChange={handleFilter} layout="vertical">
 					<Row gutter={8}>
 						<Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
 							<Form.Item label="Class" name="kelas">
@@ -198,11 +207,11 @@ export const StudentList = () => {
 									placeholder="Gender"
 									options={[
 										{
-											value: 'male',
+											value: 'Male',
 											label: 'Male',
 										},
 										{
-											value: 'female',
+											value: 'Female',
 											label: 'Female',
 										},
 									]}
@@ -211,7 +220,7 @@ export const StudentList = () => {
 						</Col>
 					</Row>
 
-					<Button>Reset Filter</Button>
+					<Button onClick={resetFilter}>Reset Filter</Button>
 				</Form>
 			),
 		},
@@ -239,33 +248,29 @@ export const StudentList = () => {
 
 			{/* Search Bar And Sorter*/}
 
-			<Collapse
-				// style={{ width: 1295 }}
-				onChange={handleCollapesOpition}
-				items={items}
-				expandIconPosition="end"
-				collapsible="icon"
-				expandIcon={({ isActive }) => (
-					<Button
-						icon={<CaretRightOutlined rotate={isActive ? 90 : 0} />}
-						iconPosition="end"
-						style={{ marginTop: 9, color: 'white' }}
-						type="primary"
-					>
-						Filter
-					</Button>
-				)}
-			/>
-			{/* <Flex vertical>
-						<p style={{ margin: 3 }}>A-Z:</p>
-						<Radio.Group
-							options={sorterOpion}
-							onChange={onSorter}
-							value={sort}
-							optionType="button"
-							buttonStyle="solid"
-						/>
-					</Flex> */}
+			<Card styles={{ body: { padding: 0 } }}>
+				<Collapse
+					items={items}
+					expandIconPosition="end"
+					ghost
+					collapsible="icon"
+					expandIcon={({ isActive }) => (
+						<Button
+							icon={<CaretRightOutlined rotate={isActive ? 90 : 0} />}
+							iconPosition="end"
+							style={{ marginTop: 9, color: 'white' }}
+							type="primary"
+						>
+							Filter
+						</Button>
+					)}
+				/>
+				<Divider style={{ marginTop: 0, marginBottom: 0 }} />
+				<Flex style={{ margin: 17 }} gap={10}>
+					<p style={{ margin: 3 }}>Sort by:</p>
+					<Radio.Group options={sorterOpion} onChange={onSorter} value={sort} optionType="button" buttonStyle="solid" />
+				</Flex>
+			</Card>
 
 			<GapComponent height={10} />
 
@@ -273,6 +278,12 @@ export const StudentList = () => {
 				{/* if 'isLoadingBiodata'true = displaying loading status */}
 				{isLoadingBiodata ? (
 					<div style={{ color: 'black' }}>Loading...</div>
+				) : data?.length === 0 ? (
+					<Col span={24}>
+						<Flex align="center" justify="center" style={{ height: '30vh' }}>
+							<Empty />
+						</Flex>
+					</Col>
 				) : (
 					data?.slice(minValue, maxValue).map((item) => (
 						<Col key={item.id} xs={24} sm={24} md={24} lg={12} xl={8}>

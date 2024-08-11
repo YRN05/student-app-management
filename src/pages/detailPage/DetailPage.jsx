@@ -4,7 +4,7 @@ import { useGetDetailBiodata } from './hooks/useDetailBiodatas'
 import { useEffect } from 'react'
 import { Button, Card, Col, Row } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons'
 import { DefaultProfile } from '../../assets'
 import { Flex } from 'antd'
 import { GapComponent } from '../../components/gapComponent/GapComponent'
@@ -21,7 +21,19 @@ export const DetailPage = () => {
 
 	return (
 		<>
-			<h1>Detail Student</h1>
+			<Flex justify="space-between" align="center">
+				<h1>Detail Student</h1>
+				<Button
+					type="primary"
+					icon={<EditOutlined />}
+					size="large"
+					shape="round"
+					onClick={() => navigate(`/edit-student/${id}`)}
+				>
+					Edit
+				</Button>
+			</Flex>
+
 			{isLoadingBiodata ? (
 				<div>Loading</div>
 			) : (
