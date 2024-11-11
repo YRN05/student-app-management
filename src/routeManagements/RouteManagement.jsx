@@ -11,6 +11,7 @@ import { AboutMe } from '../pages/aboutMe/AboutMe'
 import { StudentList } from '../pages/studentList/StudentList'
 import { AddStudent } from '../pages/addStudent/AddStudent'
 import { EditStudent } from '../pages/editStudent/EditStudent'
+import { Absen } from '../pages/absen/Absen'
 
 export const RouteManagement = () => {
 	const userData = JSON.parse(localStorage.getItem('userData'))
@@ -30,6 +31,7 @@ export const RouteManagement = () => {
 				<Route path="/student-list" element={<StudentList />} />
 				<Route path="/add-student" element={<AddStudent />} />
 				<Route path="/edit-student/:id" element={<EditStudent />} />
+				<Route path="/absen-student/" element={<Absen />} />
 			</Route>
 		</Routes>
 	)

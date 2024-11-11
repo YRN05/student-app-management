@@ -1,7 +1,7 @@
-import { useCallback } from 'react'
-import { useState } from 'react'
-import { message } from 'antd'
-import { api } from '../../../api/api'
+import { useCallback } from "react"
+import { useState } from "react"
+import { message } from "antd"
+import { api } from "../../../api/api"
 
 // untuk ambil semua data dari biodata
 export const useGetBiodata = () => {
@@ -16,10 +16,10 @@ export const useGetBiodata = () => {
 			const res = await api.getAllStudent()
 
 			// eksekusi selanjutnya
-			setData(res?.data?.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1)))
+			setData(res?.data?.student_datas?.sort((a, b) => (a.created_at > b.created_at ? -1 : 1)))
 		} catch (err) {
 			message.open({
-				type: 'error',
+				type: "error",
 				content: `${err?.message}`,
 			})
 		} finally {
@@ -40,12 +40,12 @@ export const useAddBiodata = () => {
 			await api.addStudent(data)
 			onSuccess && onSuccess()
 			message.open({
-				type: 'success',
-				content: 'Data added successfully',
+				type: "success",
+				content: "Data added successfully",
 			})
 		} catch (err) {
 			message.open({
-				type: 'error',
+				type: "error",
 				content: `${err?.message}`,
 			})
 		} finally {

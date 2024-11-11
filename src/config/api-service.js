@@ -1,8 +1,20 @@
-import axios from "axios";
+import axios from "axios"
 
 export const baseApi = axios.create({
-    baseURL: "https://659a3991652b843dea535c94.mockapi.io/api/v1/"
+	baseURL: import.meta.env.VITE_MOCK_API_SERVICE,
 })
 export const sheetDbApi = axios.create({
-    baseURL: "https://sheetdb.io/api/v1/oxxjom816zux2/"
+	baseURL: import.meta.env.VITE_SHEETDB_API_SERVICE,
+})
+
+export const hasuraRestApi = axios.create({
+	baseURL: import.meta.env.VITE_HASURA_REST_API_SERVICE,
+	headers: {
+		"Content-Type": "application/json",
+		"x-hasura-admin-secret": import.meta.env.VITE_HASURA_ADMIN_SECRET,
+	},
+})
+
+export const uploaderApi = axios.create({
+	baseURL: import.meta.env.VITE_UPLOADER_API_SERVICE,
 })

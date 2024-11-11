@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import { Modal } from 'antd'
 import { message } from 'antd'
 import { LogInIcon, RegisIcon } from '../../assets'
+import { useGetUserByUserName, useLogin, useRegister } from './hooks/useAuth'
 
 export const LoginPage = () => {
 	// stating wich page
@@ -18,6 +19,9 @@ export const LoginPage = () => {
 
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [password, setPassword] = useState('')
+	const [isLoading, login] = useLogin()
+	const [isLoadingRegis, register] = useRegister()
+	const [userData, getData] = useGetUserByUserName()
 
 	// console.log(isModalOpen)
 	const navigate = useNavigate()
@@ -27,8 +31,23 @@ export const LoginPage = () => {
 	}
 
 	const onRegist = (values) => {
-		// console.log(values)
-		setIsModalOpen(true)
+		delete values.confirm
+		// membungkus values dengan object sesuai dengan hasura
+		const body = {
+			object: values,
+		}
+		console.log('values baru', values)
+		// setIsModalOpen(true)
+
+		getData(values.username, (data) => {
+			if (data.length === 0) {
+				register(body, () => {
+					setIsModalOpen(true)
+				})
+			} else {
+				message.error('Username already registered!')
+			}
+		})
 	}
 
 	const handleOk = () => {
@@ -37,11 +56,12 @@ export const LoginPage = () => {
 	}
 
 	const handleLogIn = (values) => {
-		console.log(values)
-		localStorage.setItem('userData', JSON.stringify(values))
+		// console.log(values)
+		// localStorage.setItem('userData', JSON.stringify(values))
+		// // beralih ke halaman lain
+		// navigate('/')
 
-		// beralih ke halaman lain
-		navigate('/')
+		login(values.username, values.password)
 	}
 
 	const handleCancel = () => {
@@ -89,36 +109,35 @@ export const LoginPage = () => {
 					}}
 					onFinish={page === 'register' ? onRegist : handleLogIn}
 				>
-
 					{/* if the page is on regist or login conditional */}
 					{page === 'register' && (
 						<Form.Item
-							name="userName"
+							name="email"
 							rules={[
 								{
 									required: true,
-									message: 'Please input your username!',
+									message: 'Please input your Email!',
+								},
+								{
+									type: 'email',
+									message: 'The input is not valid E-mail!',
 								},
 							]}
 						>
-							<Input prefix={<UserOutlined />} placeholder="User Name" />
+							<Input prefix={<MailOutlined />} placeholder="Email" />
 						</Form.Item>
 					)}
 
 					<Form.Item
-						name="email"
+						name="username"
 						rules={[
 							{
 								required: true,
-								message: 'Please input your Email!',
-							},
-							{
-								type: 'email',
-								message: 'The input is not valid E-mail!',
+								message: 'Please input your username!',
 							},
 						]}
 					>
-						<Input prefix={<MailOutlined />} placeholder="Email" />
+						<Input prefix={<UserOutlined />} placeholder="User Name" />
 					</Form.Item>
 					<Form.Item
 						name="password"
@@ -164,7 +183,7 @@ export const LoginPage = () => {
 
 					{page === 'register' ? (
 						<>
-							<Button type="primary" htmlType="submit" block>
+							<Button type="primary" htmlType="submit" block loading={isLoadingRegis}>
 								Register
 							</Button>
 							<Modal open={isModalOpen} onOk={handleOk} okText="Log In" cancelText="Close" onCancel={handleCancel}>
@@ -180,10 +199,10 @@ export const LoginPage = () => {
 						</>
 					) : (
 						<>
-							<Button type="primary" htmlType='submit' block>
+							<Button type="primary" htmlType="submit" block loading={isLoading}>
 								Log In
 							</Button>
-							<Modal open={isModalOpen} okText={"Log In"} onCancel={handleCancel}>
+							<Modal open={isModalOpen} okText={'Log In'} onCancel={handleCancel}>
 								<Flex>
 									<h1>Log In Succes</h1>
 									<img src={LogInIcon} alt="icon-succes" style={{ width: 300 }} />
