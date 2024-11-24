@@ -57,6 +57,9 @@ export const api = {
 	deleteStudent: (id) => {
 		return hasuraRestApi.delete(`student_datas/${id}`)
 	},
+	editUser: (id, data) => {
+		return hasuraRestApi.post(`user/${id}`, data)
+	},
 
 	// cloudinary
 	uploader: (body) => {

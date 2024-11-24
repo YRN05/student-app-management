@@ -249,9 +249,7 @@ export const StudentList = () => {
 	return (
 		<>
 			{/* displaying email user as account name */}
-			<Card>
-				<h1 style={{ color: "#31363F" }}>{userData?.email}</h1>
-			</Card>
+			
 
 			{/* Penggunaan GapComponent */}
 			<GapComponent height={15} />
