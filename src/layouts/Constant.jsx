@@ -1,4 +1,4 @@
-import { HomeOutlined, UsergroupAddOutlined, UserOutlined } from '@ant-design/icons'
+import { GroupOutlined, HomeOutlined, UsergroupAddOutlined, UserOutlined } from '@ant-design/icons'
 import { AboutMe } from '../pages/aboutMe/AboutMe'
 
 export const HEADER_MENU = [
@@ -13,6 +13,12 @@ export const HEADER_MENU = [
 		icon: <UsergroupAddOutlined />,
 		path: '/student-list',
 		key: '/student-list',
+	},
+	{
+		label: 'User Management',
+		icon: <GroupOutlined />,
+		path: '/user-management',
+		key: '/user-management',
 	},
 	{
 		label: 'About Me',

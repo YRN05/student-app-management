@@ -1,10 +1,10 @@
-import { useCallback } from 'react'
-import { useState } from 'react'
-import { message } from 'antd'
-import { api } from '../../../api/api'
+import { useCallback } from "react"
+import { useState } from "react"
+import { message } from "antd"
+import { api } from "../../../api/api"
 
 // untuk ambil semua data dari biodata
-export const useGetBiodata = () => {
+export const useGetAllStudent = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const [data, setData] = useState()
 
@@ -16,10 +16,10 @@ export const useGetBiodata = () => {
 			const res = await api.getAllStudent()
 
 			// eksekusi selanjutnya
-			setData(res?.data)
+			setData(res?.data?.student_datas)
 		} catch (err) {
 			message.open({
-				type: 'error',
+				type: "error",
 				content: `${err?.message}`,
 			})
 		} finally {

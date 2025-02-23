@@ -22,6 +22,8 @@ import { useEditUser } from "../hooks/useUserProfile"
 import { Tag } from "antd"
 import { titleCase } from "../utils/stringManipulation"
 import { GapComponent } from "../components/gapComponent/GapComponent"
+import { PageTitle } from "./PageTitle"
+import { Space } from "antd"
 const { Sider, Header, Content, Footer } = Layout
 
 export const PublickLayout = () => {
@@ -81,7 +83,7 @@ export const PublickLayout = () => {
 		const body = {
 			object: values,
 		}
-		editUser(userData.id, body, () => {
+		editUser(userData?.id, body, () => {
 			setIsModalOpen(false)
 		})
 	}
@@ -127,7 +129,7 @@ export const PublickLayout = () => {
 						)}
 					</div>
 					<Flex justify="center" align="center">
-						<Tag style={{ fontSize: "15px" }}>{titleCase(userData.role)}</Tag>
+						<Tag style={{ fontSize: "15px" }}>{titleCase(userData?.role)}</Tag>
 					</Flex>
 					<GapComponent height={5} />
 					<Menu
@@ -153,26 +155,29 @@ export const PublickLayout = () => {
 							borderRadius: 20,
 						}}
 					>
-						<Flex justify="flex-end" align="center">
-							<div className="user-name" style={{ fontSize: "20px", color: "white", marginRight: "10px" }}>
-								{userData.username}
-							</div>
-							<Dropdown menu={{ items }} trigger={["click"]}>
-								<a onClick={(e) => e.preventDefault()}>
-									<Avatar
-										style={{
-											backgroundColor: "#f56a00",
-											verticalAlign: "middle",
-											marginRight: 10,
-										}}
-										size="large"
-										shape="square"
-										gap={1}
-									>
-										{initial}
-									</Avatar>
-								</a>
-							</Dropdown>
+						<Flex justify="space-between" align="center">
+							<PageTitle />
+							<Space>
+								<div className="user-name" style={{ fontSize: "20px", color: "white", marginRight: "10px" }}>
+									{userData?.username}
+								</div>
+								<Dropdown menu={{ items }} trigger={["click"]}>
+									<a onClick={(e) => e.preventDefault()}>
+										<Avatar
+											style={{
+												backgroundColor: "#f56a00",
+												verticalAlign: "middle",
+												marginRight: 10,
+											}}
+											size="large"
+											shape="square"
+											gap={1}
+										>
+											{initial}
+										</Avatar>
+									</a>
+								</Dropdown>
+							</Space>
 						</Flex>
 					</Header>
 					<Content

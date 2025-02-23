@@ -1,24 +1,24 @@
-import { Button, Form } from 'antd'
-import { Input } from 'antd'
-import { Card } from 'antd'
-import React from 'react'
-import './loginPage.css'
-import { Radio } from 'antd'
-import { useState } from 'react'
-import { Flex } from 'antd'
-import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
-import { Modal } from 'antd'
-import { message } from 'antd'
-import { LogInIcon, RegisIcon } from '../../assets'
-import { useGetUserByUserName, useLogin, useRegister } from './hooks/useAuth'
+import { Button, Form } from "antd"
+import { Input } from "antd"
+import { Card } from "antd"
+import React from "react"
+import "./loginPage.css"
+import { Radio } from "antd"
+import { useState } from "react"
+import { Flex } from "antd"
+import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons"
+import { useNavigate } from "react-router-dom"
+import { Modal } from "antd"
+import { message } from "antd"
+import { LogInIcon, RegisIcon } from "../../assets"
+import { useGetUserByUserName, useLogin, useRegister } from "./hooks/useAuth"
 
 export const LoginPage = () => {
 	// stating wich page
-	const [page, setPage] = useState('logIn')
+	const [page, setPage] = useState("logIn")
 
 	const [isModalOpen, setIsModalOpen] = useState(false)
-	const [password, setPassword] = useState('')
+	const [password, setPassword] = useState("")
 	const [isLoading, login] = useLogin()
 	const [isLoadingRegis, register] = useRegister()
 	const [userData, getData] = useGetUserByUserName()
@@ -33,10 +33,12 @@ export const LoginPage = () => {
 	const onRegist = (values) => {
 		delete values.confirm
 		// membungkus values dengan object sesuai dengan hasura
+
+		// values.role = "STUDENT"
 		const body = {
 			object: values,
 		}
-		console.log('values baru', values)
+		console.log("values baru", values)
 		// setIsModalOpen(true)
 
 		getData(values.username, (data) => {
@@ -45,13 +47,13 @@ export const LoginPage = () => {
 					setIsModalOpen(true)
 				})
 			} else {
-				message.error('Username already registered!')
+				message.error("Username already registered!")
 			}
 		})
 	}
 
 	const handleOk = () => {
-		setPage('logIn')
+		setPage("logIn")
 		setIsModalOpen(false)
 	}
 
@@ -107,20 +109,20 @@ export const LoginPage = () => {
 					style={{
 						maxWidth: 600,
 					}}
-					onFinish={page === 'register' ? onRegist : handleLogIn}
+					onFinish={page === "register" ? onRegist : handleLogIn}
 				>
 					{/* if the page is on regist or login conditional */}
-					{page === 'register' && (
+					{page === "register" && (
 						<Form.Item
 							name="email"
 							rules={[
 								{
 									required: true,
-									message: 'Please input your Email!',
+									message: "Please input your Email!",
 								},
 								{
-									type: 'email',
-									message: 'The input is not valid E-mail!',
+									type: "email",
+									message: "The input is not valid E-mail!",
 								},
 							]}
 						>
@@ -133,7 +135,7 @@ export const LoginPage = () => {
 						rules={[
 							{
 								required: true,
-								message: 'Please input your username!',
+								message: "Please input your username!",
 							},
 						]}
 					>
@@ -145,32 +147,32 @@ export const LoginPage = () => {
 						rules={[
 							{
 								required: true,
-								message: 'Please input your password!',
+								message: "Please input your password!",
 							},
 							// conditional regex
-							page === 'register' && {
+							page === "register" && {
 								// regex syntax
 								pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9_])(?=.{8,})/,
-								message: 'Your password doensnt strong enough',
+								message: "Your password doensnt strong enough",
 							},
 						]}
 					>
 						<Input.Password prefix={<LockOutlined />} placeholder="Password" />
 					</Form.Item>
-					{page === 'register' && (
+					{page === "register" && (
 						<Form.Item
 							name="confirm"
 							rules={[
 								{
 									required: true,
-									message: 'Please input your password!',
+									message: "Please input your password!",
 								},
 								({ getFieldValue }) => ({
 									validator(rule, value) {
-										if (getFieldValue('password') === value) {
+										if (getFieldValue("password") === value) {
 											return Promise.resolve()
 										} else {
-											return Promise.reject(new Error('password tidak sama'))
+											return Promise.reject(new Error("password tidak sama"))
 										}
 									},
 								}),
@@ -181,7 +183,7 @@ export const LoginPage = () => {
 						</Form.Item>
 					)}
 
-					{page === 'register' ? (
+					{page === "register" ? (
 						<>
 							<Button type="primary" htmlType="submit" block loading={isLoadingRegis}>
 								Register
@@ -202,7 +204,7 @@ export const LoginPage = () => {
 							<Button type="primary" htmlType="submit" block loading={isLoading}>
 								Log In
 							</Button>
-							<Modal open={isModalOpen} okText={'Log In'} onCancel={handleCancel}>
+							<Modal open={isModalOpen} okText={"Log In"} onCancel={handleCancel}>
 								<Flex>
 									<h1>Log In Succes</h1>
 									<img src={LogInIcon} alt="icon-succes" style={{ width: 300 }} />

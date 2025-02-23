@@ -60,6 +60,18 @@ export const api = {
 	editUser: (id, data) => {
 		return hasuraRestApi.post(`user/${id}`, data)
 	},
+	getAllUser: () => {
+		return hasuraRestApi.get(`user`)
+	},
+	deleteUserById: (id) => {
+		return hasuraRestApi.delete(`user/${id}`)
+	},
+	addUser: (data) => {
+		return hasuraRestApi.post(`user`, data)
+	},
+	editUser: (id, data) => {
+		return hasuraRestApi.post(`user/${id}`, data)
+	},
 
 	// cloudinary
 	uploader: (body) => {
